@@ -5,7 +5,7 @@ namespace jp.geometry
 {
     public class DemoController : MonoBehaviour
     {
-        public GameObject LargeSphere;
+        public AnimationJobTest controllerHangingGameObject;
         public AnimationJobTest controller0;
         public AnimationJobTest controller1;
         public AnimationJobTest controller2;
@@ -16,7 +16,7 @@ namespace jp.geometry
         private enum Status
         {
             started,
-            isKinmaticOff,
+            dropSphere,
  
             drop0,
             drop1,
@@ -27,11 +27,9 @@ namespace jp.geometry
 
         public void Reset()
         {
-            if (LargeSphere != null)
+            if (controllerHangingGameObject != null)
             {
-                LargeSphere.GetComponent<Transform>().rotation = Quaternion.Euler(Vector3.zero);
-                var rb = LargeSphere.GetComponent<Rigidbody>();
-                rb.isKinematic = true;
+                controllerHangingGameObject.Reset();
             }
             if (controller0 != null)
             {
@@ -57,16 +55,14 @@ namespace jp.geometry
             switch (status)
             {
                 case Status.started:
-                    if (LargeSphere != null)
+                    if (controllerHangingGameObject != null)
                     {
-                        LargeSphere.GetComponent<Transform>().rotation = Quaternion.Euler(Vector3.zero);
-                        var rb = LargeSphere.GetComponent<Rigidbody>();
-                        rb.isKinematic = false;
+                        controllerHangingGameObject.DetachGameObject();
                     }
-                    status = Status.isKinmaticOff;
+                    status = Status.dropSphere;
                     break;
                 
-                case Status.isKinmaticOff:
+                case Status.dropSphere:
                     if (controller0 != null)
                     {
                         controller0.DetachCeiling();
@@ -88,6 +84,10 @@ namespace jp.geometry
                     if (controller2 != null)
                     {
                         controller2.DetachGameObject();
+                    }
+                    if (controllerHangingGameObject != null)
+                    {
+                        controllerHangingGameObject.DetachCeiling();
                     }
                     status = Status.drop2;
                     break;

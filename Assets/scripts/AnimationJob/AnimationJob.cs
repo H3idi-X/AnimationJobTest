@@ -328,7 +328,7 @@ namespace jp.geometry
                     continue;
                 if (pointIndex > 0 && hangGameObjectFlag != 0)
                 {
-                    // ignore pointindex more than 0 if hangGameObjectFlag is enable
+                    // ignore pointindex more than 0 if hangGameObjectFlag is enabled
                     continue;
                 }
                 positions[pointIndex] = constraints[i].fixedPosition;

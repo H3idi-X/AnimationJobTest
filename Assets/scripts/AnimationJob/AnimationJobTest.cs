@@ -158,12 +158,27 @@ namespace jp.geometry
                 else
                     job.ResetConstraint(0);
             }
-            if (m_targetGameObject != null && HangGameObject == false)
+            if (m_targetGameObject != null )
             {
-                if ( m_targetGameObjectAttached )
-                    job.SetConstraint(1, m_targetGameObject.transform.position);
+                if ( HangGameObject == false)
+                {
+                    if (m_targetGameObjectAttached)
+                        job.SetConstraint(1, m_targetGameObject.transform.position);
+                    else
+                        job.ResetConstraint(1);
+                }
                 else
-                    job.ResetConstraint(1);
+                {
+                    if (m_targetGameObjectAttached)
+                    {
+//                        job.SetConstraint(1, m_targetGameObject.transform.position);
+                    }
+                    else
+                    {
+//                        job.ResetConstraint(1);
+                    }
+                }
+            
             }
             if (windGenerator != null)
             {
@@ -228,7 +243,13 @@ namespace jp.geometry
         {
             m_targetGameObjectAttached = true;
             m_ceilingGameObjectAttached = true;
-
+            if (HangGameObject)
+            {
+                if (m_targetGameObject != null)
+                {
+                    SetIsKinmatic(m_targetGameObject,true);
+                }
+            }
         }
 
         public void DetachCeiling()
@@ -239,8 +260,31 @@ namespace jp.geometry
         public void DetachGameObject()
         {
             m_targetGameObjectAttached = false;
-        }
+            if ( HangGameObject )
+            {
+                if (m_targetGameObject != null)
+                {
+                    SetIsKinmatic(m_targetGameObject, false);
 
+                }
+            }
+        }
+        void SetIsKinmatic(GameObject go, bool flag)
+        {
+            var rb = go.GetComponent<Rigidbody>();
+            while (rb == null)
+            {
+                var parent = go.transform.parent;
+                if (parent == null)
+                {
+                    return;
+                }
+                go = parent.gameObject;
+                rb = go.GetComponent<Rigidbody>();
+            }
+            go.GetComponent<Transform>().rotation = Quaternion.Euler(Vector3.zero);
+            rb.isKinematic = flag;
+        }
         void OnDestroy()
         {
 //            AnimatorUtility.DeoptimizeTransformHierarchy(m_SphereGameObjects[0]);

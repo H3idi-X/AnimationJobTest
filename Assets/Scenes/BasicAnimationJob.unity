@@ -1146,7 +1146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09f08fa7445ac7b41904660b0ebe2730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LargeSphere: {fileID: 2101768617}
+  controllerHangingGameObject: {fileID: 1692240974}
   controller0: {fileID: 637806850}
   controller1: {fileID: 17320106}
   controller2: {fileID: 879382832}
@@ -2215,7 +2215,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.40784314}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -2735,7 +2735,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.4117647}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -3487,7 +3487,8 @@ MonoBehaviour:
   GameObjectMaterial: {fileID: 2100000, guid: e35aaea1cd2878b49a64beeb3a4ef4bd, type: 2}
   HangGameObject: 1
   windGenerator: {fileID: 493026517}
-  Collisions: []
+  Collisions:
+  - {fileID: 2101768617}
   m_ceilingGameObject: {fileID: 403248632}
   m_ceilingGameObjectAttached: 1
   m_targetGameObject: {fileID: 84836934}
