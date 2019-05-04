@@ -1,5 +1,4 @@
-﻿using Unity.Burst;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Experimental.Animations;
@@ -44,6 +43,7 @@ namespace jp.geometry
         private NativeArray<float3> velocities;
         private NativeArray<float3> forces;
         private NativeArray<float> masses;
+        private NativeArray<int> flags;
         private NativeArray<SphereCollision> sphereCollisions;
         public float timeIntervalInSeconds;
         private float3 gravity;
@@ -74,8 +74,11 @@ namespace jp.geometry
             velocities = new NativeArray<float3>(length, Allocator.Persistent);
             forces = new NativeArray<float3>(length, Allocator.Persistent);
             masses = new NativeArray<float>(length, Allocator.Persistent);
+            flags = new NativeArray<int>(length, Allocator.Persistent);
             constraints = new NativeArray<Constraint>(2, Allocator.Persistent);
             sphereCollisions = new NativeArray<SphereCollision>(1, Allocator.Persistent);
+
+
             for ( int i = 0; i < sphereCollisions.Length;i++)
             {
                 sphereCollisions[i] = new SphereCollision()
@@ -85,6 +88,11 @@ namespace jp.geometry
                     radious = 0.0f
                 };
             }
+            for (int i = 0; i < flags.Length; i++)
+            {
+                flags[i] = 0;
+            }
+            flags[0] = 0x8000;
             constraints[0] = new Constraint()
             {
                 pointIndex = 0,
@@ -169,6 +177,7 @@ namespace jp.geometry
                 cons.pointIndex = pointIndex;
                 cons.fixedPosition = constraintPosition;
                 constraints[index] = cons;
+                flags[pointIndex] = 0x8000;
             }
         }
 
@@ -177,8 +186,11 @@ namespace jp.geometry
             if (constraints.Length > index)
             {
                 Constraint cons = constraints[index];
+                if (cons.pointIndex >= 0)
+                    flags[cons.pointIndex] &= ~0x8000;
                 cons.pointIndex = -1;
                 constraints[index] = cons;
+
             }
         }
 
@@ -229,6 +241,7 @@ namespace jp.geometry
             constraints.Dispose();
             vectorData.Dispose();
             masses.Dispose();
+            flags.Dispose();
             sphereCollisions.Dispose();
 
         }
@@ -289,8 +302,9 @@ namespace jp.geometry
                 float3 newVelocity = velocities[i] + timeIntervalInSeconds * newAcceleration;
                 float3 newPosition = positions[i] + timeIntervalInSeconds * newVelocity;
 
-                // Collision
-                if ( i > 0 && (numberOfPoints > 2) ?  (i <  numberOfPoints - 2): false )
+                // Collision , ready for sphere only.
+               // if ( i > 0 && (numberOfPoints > 2) ?  (i <  numberOfPoints - 2): false )
+                if( ((flags[i] & 0x8000) == 0) && ((i == numberOfEdges-1) ? (hangGameObjectFlag == 0) :true)) // not attached.
                 {
                     for (int j = 0; j < sphereCollisions.Length; j++)
                     {
