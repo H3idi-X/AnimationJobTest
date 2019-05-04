@@ -62,7 +62,7 @@ namespace jp.geometry
         public int hangGameObjectFlag;
 
         public float elapsed;
-
+        private float resolution;
         //        internal TransformSceneHandle targetEffector;
 
         public void SetUp()
@@ -107,7 +107,7 @@ namespace jp.geometry
 
             restitutionCoefficient =   0.3f;
 #else
-            stiffness = 1400.0f;//
+            stiffness = 1300.0f;//
                                  //            restLength = 1.0f;
             dampingCoefficient = 7.0f;
             dragCoefficient = 2.1f;
@@ -121,7 +121,9 @@ namespace jp.geometry
 
             MakeChain(length);
             baseAxis = AnimationJob.BaseAxis.Y;
-            timeIntervalInSeconds = Time.fixedDeltaTime;
+            timeIntervalInSeconds = 1 / 30.0f; // Time.fixedDeltaTime;
+            resolution = 0.5f;
+            timeIntervalInSeconds *=  resolution;
             elapsed = 0.0f;
 
 
@@ -143,10 +145,16 @@ namespace jp.geometry
         }
         */
 
+         
         public void SetVectorData(int index, Vector3 data)
         {
             if ( index < vectorData.Length)
                 vectorData[index] = data;
+        }
+        public void SetEffectorMass(int index, float mass)
+        {
+            if (index < masses.Length)
+                masses[index] = mass;
         }
         public void SetConstraint(int index,  Vector3 constraintPosition)
         {
@@ -344,7 +352,7 @@ namespace jp.geometry
         
         public void ProcessAnimation(AnimationStream stream)
         {
-            elapsed += timeIntervalInSeconds;
+            //elapsed += timeIntervalInSeconds;
             /*
             if (targetEffector.IsValid(stream))
             {
@@ -353,13 +361,13 @@ namespace jp.geometry
             }*/
             //Debug.Log($"ProcessAnimation::dampingCoefficient = {dampingCoefficient}");
             
-            for ( int ii = 0; ii < 1; ii++)
+            for ( int ii = 0; ii < 2; ii++) // 2 = 1/0.5
             { 
                 UpdateChain();
             }
             if ( initialized == 0)
             {
-                for ( int ii = 0; ii < 180; ii++)
+                for ( int ii = 0; ii < 360; ii++)
                 {
                     UpdateChain();
                 }

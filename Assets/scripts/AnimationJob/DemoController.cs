@@ -11,12 +11,11 @@ namespace jp.geometry
         public AnimationJobTest controller2;
         public AnimationJobTest controller3;
 
-
+        float elapsed = 0.0f;
         private Status status;
         private enum Status
         {
             started,
-            dropSphere,
  
             drop0,
             drop1,
@@ -27,6 +26,7 @@ namespace jp.geometry
 
         public void Reset()
         {
+            elapsed = 0;
             if (controllerHangingGameObject != null)
             {
                 controllerHangingGameObject.Reset();
@@ -55,21 +55,19 @@ namespace jp.geometry
             switch (status)
             {
                 case Status.started:
-                    if (controllerHangingGameObject != null)
-                    {
-                        controllerHangingGameObject.DetachGameObject();
-                    }
-                    status = Status.dropSphere;
-                    break;
-                
-                case Status.dropSphere:
                     if (controller0 != null)
                     {
                         controller0.DetachCeiling();
                     }
                     status = Status.drop0;
                     break;
+                
                 case Status.drop0:
+                    if (controllerHangingGameObject != null)
+                    {
+                        controllerHangingGameObject.SetLastEffectorMass(50.0f);
+                    }
+
                     if (controller1 != null)
                     {
                         controller1.DetachGameObject();
@@ -81,17 +79,11 @@ namespace jp.geometry
                     status = Status.drop1;
                     break;
                 case Status.drop1:
-                    if (controller2 != null)
-                    {
-                        controller2.DetachGameObject();
-                    }
-                    if (controllerHangingGameObject != null)
-                    {
-                        controllerHangingGameObject.DetachCeiling();
-                    }
-                    status = Status.drop2;
+//
+//                    status = Status.drop2;
                     break;
                 case Status.drop2:
+
                     if (controller3 != null)
                     {
                         controller3.DetachCeiling();
@@ -100,6 +92,11 @@ namespace jp.geometry
                     {
                         controller2.DetachCeiling();
                     }
+                    if (controller2 != null)
+                    {
+                        controller2.DetachGameObject();
+                    }
+
                     status = Status.dropDone;
                     break;
 
@@ -120,7 +117,19 @@ namespace jp.geometry
         // Update is called once per frame
         void Update()
         {
-
+            if ( status == Status.drop1)
+            {
+                elapsed += Time.deltaTime;
+                if ( elapsed >= 0.8f)
+                {
+                    if (controllerHangingGameObject != null)
+                    {
+                        controllerHangingGameObject.DetachCeiling();
+                        controllerHangingGameObject.DetachGameObject();
+                    }
+                    status = Status.drop2;
+                }
+            }
         }
     }
 }

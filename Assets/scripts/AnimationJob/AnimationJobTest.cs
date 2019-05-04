@@ -169,16 +169,8 @@ namespace jp.geometry
                 }
                 else
                 {
-                    if (m_targetGameObjectAttached)
-                    {
-//                        job.SetConstraint(1, m_targetGameObject.transform.position);
-                    }
-                    else
-                    {
-//                        job.ResetConstraint(1);
-                    }
+                    
                 }
-            
             }
             if (windGenerator != null)
             {
@@ -239,6 +231,15 @@ namespace jp.geometry
             }
 
         }
+
+        public void SetLastEffectorMass(float mass)
+        {
+            int length = m_SphereGameObjects.Length;
+            if (length < 2)
+                return;
+            job.SetEffectorMass(length-1,mass);
+        }
+
         public void Reset()
         {
             m_targetGameObjectAttached = true;
@@ -250,6 +251,7 @@ namespace jp.geometry
                     SetIsKinmatic(m_targetGameObject,true);
                 }
             }
+            SetLastEffectorMass(5.0f);
         }
 
         public void DetachCeiling()
