@@ -321,7 +321,9 @@ namespace jp.geometry
                             float3 repulse = newPosition - sphereCollisions[j].centerPosition;
                             newPosition = sphereCollisions[j].centerPosition 
                                 + math.normalize(repulse) * (sphereCollisions[j].radious+restLength * 0.5f);
-                            newVelocity.y *= -restitutionCoefficient;
+                            repulse.y = 0;
+                            repulse = math.normalize(repulse) * radious * 0.00001f; // experiment. avoid being kept in one certain point.
+                            newVelocity += repulse;
                         }
                     }
 
