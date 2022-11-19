@@ -1,12 +1,12 @@
 ﻿using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Experimental.Animations;
+
 using math = Unity.Mathematics.math;
 namespace jp.geometry
 {
 //    [BurstCompile]
-    public struct AnimationJob: IAnimationJob
+    public struct AnimationJob: UnityEngine.Animations.IAnimationJob
     {
         public struct Edge
         {
@@ -34,7 +34,7 @@ namespace jp.geometry
             Y,
             Z
         };
-        public NativeArray<TransformStreamHandle> joints;
+        public NativeArray<UnityEngine.Animations.TransformStreamHandle> joints;
         //        public NativeArray<TransformSceneHandle> effectors;
         private NativeArray<Edge> edges;
         private NativeArray<Constraint> constraints;
@@ -366,7 +366,7 @@ namespace jp.geometry
                 sphereCollisions[index] = col;
         }
         
-        public void ProcessAnimation(AnimationStream stream)
+        public void ProcessAnimation(UnityEngine.Animations.AnimationStream stream)
         {
             //elapsed += timeIntervalInSeconds;
             /*
@@ -406,6 +406,6 @@ namespace jp.geometry
             }
         }
 
-        public void ProcessRootMotion(AnimationStream stream) { }
+        public void ProcessRootMotion(UnityEngine.Animations.AnimationStream stream) { }
     }
 }
